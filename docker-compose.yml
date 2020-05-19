@@ -6,3 +6,4 @@ services:
     - "./www:/var/www/html"
   ports: 
    - "8000:80"
+   - "2333:22"

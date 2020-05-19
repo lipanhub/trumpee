@@ -14,9 +14,20 @@ sed -i "s/flag{x*}/$(cat /root/flag.txt)/" $flagfile
 mysqladmin -u root password "529529"
 mysql -uroot -p529529 -e "CREATE DATABASE IF NOT EXISTS wordpress"
 mysql -uroot -p529529 wordpress < $flagfile
+#启动ssh服务
+#/usr/sbin/sshd -D
 #删除sql文件(一般是要删除的) / 如果不是sql文件这里不需要删除
 #rm -f $flagfile
 #fi
-/usr/sbin/apache2ctl -D FOREGROUND
+#/usr/sbin/apache2ctl -D FOREGROUND
+#/usr/sbin/sshd -D
+/usr/sbin/sshd & /usr/sbin/apache2ctl -D FOREGROUND
+echo "root:123" | chpasswd
+#groupadd drv
+#useradd -d /data -g drv -m drv
+#echo "drv:123" | chpasswd
+#chown -R drv:drv /data
+#usermod -s /bin/bash drv
+
 #service apache2 start
 #/bin/bash

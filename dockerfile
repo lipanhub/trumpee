@@ -12,7 +12,20 @@ RUN apt-get update -y
 #防止Apache安装过程中地区的设置出错
 ENV DEBIAN_FRONTEND noninteractive
 
-#如 安装mysql
+#安装ssh服务
+RUN apt-get install -y openssh-server
+RUN mkdir -p /var/run/sshd
+RUN sed 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' -i /etc/ssh/sshd_config
+#echo "root:123" | chpasswd
+#添加drv用户
+RUN groupadd drv
+RUN useradd -d /data -g drv -m drv
+RUN echo "drv:123" | chpasswd
+RUN chown -R drv:drv /data
+RUN usermod -s /bin/bash drv
+WORKDIR /data
+USER root
+#安装mysql
 RUN apt-get -y install mysql-server
 #安装apache2
 RUN apt-get -yqq install apache2
@@ -31,9 +44,10 @@ RUN sed -i 's/Options Indexes FollowSymLinks/Options None/' /etc/apache2/apache2
 RUN chmod -R 755 /var/www/html
 
 COPY start.sh /root/start.sh
+COPY flag3.txt /data
 
 RUN chmod +x /root/start.sh
 
 ENTRYPOINT cd /root; ./start.sh
 
-EXPOSE 80
+EXPOSE 80 22
